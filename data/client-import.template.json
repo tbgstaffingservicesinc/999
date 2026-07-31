@@ -1,0 +1,23 @@
+{
+  "internal_client_id": "YOUR_INTERNAL_CLIENT_ID",
+  "legal_business_name": "Your Business Name Inc.",
+  "business_type": "Corporation",
+  "business_website": "https://yourbusiness.com",
+  "business_address": "123 Main Street, Anytown, USA 12345",
+  "notification_email": "billing@yourbusiness.com",
+  "authorized_contact_name": "Jane Doe",
+  "twilio_account_sid": "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "requested_tfn_quantity": 5,
+  "message_use_case": "2FA, notifications, and customer support.",
+  "estimated_monthly_message_volume": 10000,
+  "opt_in_workflow": "Users opt-in by checking a box on our website signup form.",
+  "opt_in_image_url": "https://yourbusiness.com/path/to/opt-in-screenshot.png",
+  "privacy_policy_url": "https://yourbusiness.com/privacy",
+  "terms_and_conditions_url": "https://yourbusiness.com/terms",
+  "help_message": "HELP for help, STOP to cancel.",
+  "opt_out_message": "You have been unsubscribed.",
+  "sample_messages": [
+    "Your verification code is 123456.",
+    "Your appointment is confirmed for tomorrow at 2:00 PM."
+  ]
+}
