@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [supabase] = useState(createClient);
 
   const handleLogin = async () => {
     if (loading) return;
@@ -22,6 +21,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
+      const supabase = createClient();
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
@@ -90,3 +90,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+﻿import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { env } from '@/lib/env'
+import { tryGetSupabasePublicEnv } from '@/lib/env'
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -8,6 +8,12 @@ export async function updateSession(request: NextRequest) {
       headers: request.headers,
     },
   })
+
+  const environment = tryGetSupabasePublicEnv()
+  if (!environment.success) {
+    return response
+  }
+  const env = environment.data
 
   const supabase = createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
@@ -59,3 +65,6 @@ export async function updateSession(request: NextRequest) {
 
   return response
 }
+
+
+

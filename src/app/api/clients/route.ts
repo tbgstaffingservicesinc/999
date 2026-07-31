@@ -1,13 +1,9 @@
-import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
-import { NextResponse } from 'next/server';
-import { env } from '@/lib/env';
+﻿import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const supabase = createBrowserClient(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  const supabase = await createClient();
 
   const { data, error } = await supabase.from('clients').insert(body).select();
 
@@ -17,3 +13,4 @@ export async function POST(request: Request) {
 
   return NextResponse.json(data);
 }
+
