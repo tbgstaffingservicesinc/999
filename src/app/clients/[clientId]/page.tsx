@@ -1,10 +1,13 @@
-import { getClientById } from "@/lib/clients";
+﻿import { getClientById } from "@/lib/clients";
 import { getTwilioConnection } from "@/lib/twilio-connections";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TwilioConnectionForm } from "@/components/twilio/twilio-connection-form";
+import { tryGetSupabasePublicEnv } from "@/lib/env";
+import { SupabaseConfigurationRequired } from "@/components/configuration-alert";
 
 
 export default async function ClientDetailPage({ params }: { params: { clientId: string } }) {
+  if (!tryGetSupabasePublicEnv().success) return <SupabaseConfigurationRequired />;
   const [client, twilioConnection] = await Promise.all([
     getClientById(params.clientId),
     getTwilioConnection(params.clientId),
@@ -76,3 +79,4 @@ export default async function ClientDetailPage({ params }: { params: { clientId:
     </div>
   );
 }
+

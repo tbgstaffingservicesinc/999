@@ -2,10 +2,13 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusSyncButton } from "@/components/tfv/status-sync-button";
 import { createClient } from "@/lib/supabase/server";
+import { tryGetSupabasePublicEnv } from "@/lib/env";
+import { SupabaseConfigurationRequired } from "@/components/configuration-alert";
 
 interface StatusRow { id: string; status: string; submitted_at: string | null; tfv_phone_numbers: Array<{ phone_numbers: { phone_number: string } | null }> | null; }
 
 export default async function StatusPage() {
+  if (!tryGetSupabasePublicEnv().success) return <SupabaseConfigurationRequired />;
   const supabase = await createClient();
   const { data } = await supabase.from('tfv_applications').select('id,status,submitted_at,tfv_phone_numbers(phone_numbers(phone_number))').order('created_at', { ascending: false }).limit(100);
   const rows = (data ?? []) as unknown as StatusRow[];
@@ -31,3 +34,4 @@ export default async function StatusPage() {
     </div>
   );
 }
+

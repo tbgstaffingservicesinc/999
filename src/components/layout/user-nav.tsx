@@ -8,18 +8,19 @@ import type { User } from '@supabase/supabase-js';
 
 export default function UserNav() {
   const [user, setUser] = useState<User | null>(null);
+  const [configurationError, setConfigurationError] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabaseRef.current = supabase;
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    };
-    void fetchUser();
+useEffect(() => {
+    try {
+      const supabase = createClient();
+      supabaseRef.current = supabase;
+      void supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    } catch {
+      setConfigurationError(true);
+    }
   }, []);
 
   const handleLogout = async () => {
@@ -28,6 +29,9 @@ export default function UserNav() {
     router.refresh();
   };
 
+  if (configurationError) {
+    return <span role="status" className="text-sm text-amber-700">Authentication is not configured</span>;
+  }
   if (!user && pathname === '/login') {
     return null;
   }
@@ -45,5 +49,6 @@ export default function UserNav() {
     </div>
   );
 }
+
 
 

@@ -1,9 +1,12 @@
 ﻿﻿import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { createClient } from "@/lib/supabase/server";
+import { tryGetSupabasePublicEnv } from "@/lib/env";
+import { SupabaseConfigurationRequired } from "@/components/configuration-alert";
 
 interface AuditRow { id: string; created_at: string; actor_id: string | null; action: string; }
 
 export default async function AuditPage() {
+  if (!tryGetSupabasePublicEnv().success) return <SupabaseConfigurationRequired />;
   const supabase = await createClient();
   const { data } = await supabase.from('audit_events').select('id,created_at,actor_id,action').order('created_at', { ascending: false }).limit(100);
   const rows = (data ?? []) as AuditRow[];
@@ -22,3 +25,4 @@ export default async function AuditPage() {
     </div>
   );
 }
+

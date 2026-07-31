@@ -1,6 +1,7 @@
-import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
+﻿import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
-import { env } from '@/lib/env';
+import { getSupabasePublicEnv } from '@/lib/env';
+import { supabaseConfigurationErrorResponse } from '@/lib/http-configuration';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -9,9 +10,12 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const configurationError = supabaseConfigurationErrorResponse();
+  if (configurationError) return configurationError;
   const url = new URL(request.url);
   const clientId = url.pathname.split('/').pop();
   const body = await request.json();
+  const env = getSupabasePublicEnv();
   const supabase = createBrowserClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -31,8 +35,11 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const configurationError = supabaseConfigurationErrorResponse();
+  if (configurationError) return configurationError;
   const url = new URL(request.url);
   const clientId = url.pathname.split('/').pop();
+  const env = getSupabasePublicEnv();
   const supabase = createBrowserClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -46,3 +53,5 @@ export async function DELETE(request: Request) {
 
   return new Response(null, { status: 204 });
 }
+
+

@@ -2,11 +2,14 @@
 import { AvailableNumberEngine } from "@/modules/available-numbers";
 import { createTwilioService, TwilioServiceError } from "@/services/twilio";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseConfigurationErrorResponse } from "@/lib/http-configuration";
 import { SupabaseAuditLogger, SupabaseAuditRepository } from "@/infrastructure/repositories/supabase";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
+  const configurationError = supabaseConfigurationErrorResponse();
+  if (configurationError) return configurationError;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -40,3 +43,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

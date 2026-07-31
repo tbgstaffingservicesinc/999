@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
+import { ConfigurationAlert } from "@/components/configuration-alert";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
           <Sidebar />
           <div className="flex flex-col flex-1">
             <Header />
+            <ConfigurationAlert />
             <main className="flex-1 p-6">
               {children}
             </main>
@@ -32,3 +34,4 @@ export default function RootLayout({
     </html>
   );
 }
+

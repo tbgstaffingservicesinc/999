@@ -2,10 +2,13 @@
 import { createImportEngine } from "@/application/imports";
 import type { ImportClientResolution, ImportFileFormat } from "@/modules/import";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseConfigurationErrorResponse } from "@/lib/http-configuration";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  const configurationError = supabaseConfigurationErrorResponse();
+  if (configurationError) return configurationError;
   const supabase = await createClient();
   const {
     data: { user },
@@ -78,3 +81,4 @@ function parseResolution(formData: FormData): ImportClientResolution | { error: 
   }
   return { mode, existingClientId };
 }
+

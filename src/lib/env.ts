@@ -12,6 +12,32 @@ const envSchema = supabasePublicEnvSchema.extend({
   NEXT_PUBLIC_APP_NAME: z.string().default('Twilio Toll-Free Number Operations Console'),
 });
 
+
+export const REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES = [
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "CREDENTIAL_ENCRYPTION_KEY",
+  "TWILIO_ACCOUNT_SID",
+  "TWILIO_API_KEY_SID",
+  "TWILIO_API_KEY_SECRET",
+  "TWILIO_EXECUTION_ENABLED",
+] as const;
+
+export function getMissingProductionEnvironmentVariables(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): string[] {
+  return REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES.filter((name) => {
+    const value = environment[name]?.trim();
+    if (!value) return true;
+    if (name === "NEXT_PUBLIC_SUPABASE_URL") {
+      try { new URL(value); } catch { return true; }
+    }
+    if (name === "CREDENTIAL_ENCRYPTION_KEY" && value.length !== 64) return true;
+    if (name === "TWILIO_EXECUTION_ENABLED" && !/^(true|false)$/i.test(value)) return true;
+    return false;
+  });
+}
 type Environment = z.infer<typeof envSchema>;
 type SupabasePublicEnvironment = z.infer<typeof supabasePublicEnvSchema>;
 
@@ -58,6 +84,7 @@ export const env = new Proxy({} as Environment, {
     return getEnv()[property];
   },
 });
+
 
 
 
